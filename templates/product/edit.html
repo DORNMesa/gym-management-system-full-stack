@@ -1,0 +1,81 @@
+{% extends "../base.html" %}
+
+{% block body %}
+<div class="conponentSection p-5 sm:ml-64 bg-gray-200">
+    <div class="componentWrapper">
+        <!-- Edit Form starts  -->
+        <div class="formSection bg-white p-4 rounded shadow-md mb-4">
+            <h3 class="text-2xl font-bold mb-4">Edit Product</h3>
+            <form class="grid grid-cols-3 gap-4" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- Col 1 -->
+                <div class="grid gap-2">
+                    <input class="border w-full p-4 leading-tight bg-slate-100" 
+                           name="name" 
+                           type="text" 
+                           placeholder="Name" 
+                           value="{{ product.name }}" 
+                           required />
+                    <input class="border w-full p-4 leading-tight bg-slate-100" 
+                           name="price" 
+                           type="number" 
+                           step="0.01" 
+                           placeholder="Price" 
+                           value="{{ product.price }}" 
+                           required />
+                </div>
+                <!-- Col 2 -->
+                <div class="grid gap-2">
+                    <select name="category" class="border w-full p-4 leading-tight bg-slate-100" required>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" 
+                                    {% if category.id == product.category.id %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <input class="border w-full p-4 leading-tight bg-slate-100" 
+                           name="stock" 
+                           type="number" 
+                           placeholder="Stock" 
+                           value="{{ product.stock }}" 
+                           required />
+                </div>
+                <!-- Col 3 -->
+                <div class="grid gap-2">
+                    <textarea class="border w-full p-4 leading-tight bg-slate-100" 
+                              name="description" 
+                              placeholder="Description">{{ product.description }}</textarea>
+                    
+                    {% if product.image %}
+                        <div class="mb-2">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-32 h-32 object-cover rounded">
+                        </div>
+                    {% endif %}
+                    
+                    <input type="file" 
+                           name="image" 
+                           accept="image/*" 
+                           class="border w-full p-4 leading-tight bg-slate-100">
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" 
+                               name="is_available" 
+                               id="is_available" 
+                               class="mr-2"
+                               {% if product.is_available %}checked{% endif %} />
+                        <label for="is_available">Available</label>
+                    </div>
+                </div>
+                <div class="col-span-3">
+                    <button class="bg-blue-900 text-white font-bold py-2 px-4 w-full" 
+                            type="submit">
+                        Update Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+

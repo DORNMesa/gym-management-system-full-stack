@@ -63,6 +63,16 @@ To install and run the Gym Management System locally, please follow these steps:
 - Perform database migrations: ```python manage.py migrate```
 - Start the development server: ```python manage.py runserver```
 - Open your web browser and access the application at http://localhost:8000
+
+Additional commands that might be helpful:
+- Create database tables for a specific app: ```python manage.py makemigrations app_name```
+- Apply migrations for a specific app: ```python manage.py migrate app_name```
+- Collect static files: ```python manage.py collectstatic```
+- Create superuser with manager privileges: ```python manage.py createsuperuser```
+- Check for any issues in your project: ```python manage.py check```
+- List all available management commands: ```python manage.py help```
+- Clear expired sessions: ```python manage.py clearsessions```
+- Shell for testing queries: ```python manage.py shell```
 ## Usage
 - **Manager Account Creation**: Create a superuser using ```python manage.py createsuperuser``` to create manager account.
 - **Manager Login**: Use the Manager account credentials to log in to the system.

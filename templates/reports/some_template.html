@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+{% extends "../base.html" %}
+{% load report_filters %}
+
+<!-- Make sure to use report_subtract instead of subtract -->
+{{ value|report_subtract:arg }}
+
+
+

@@ -1,9 +1,11 @@
+<!DOCTYPE html>
 {% extends "../base.html" %}
-{% load custom_filters %}
+{% load static %}
+{% load member_filters %}
 
 {% block body %}
 <!-- component sections starts  -->
-<div class="conponentSection p-5 sm:ml-64 bg-gray-200">
+<div class="componentSection p-5 sm:ml-64 bg-gray-200">
   <div class="componentWrapper">
     <!-- List section starts  -->
     <div class="bg-gray-50 p-4 shadow-xl rounded-md">
@@ -13,7 +15,7 @@
             <tr>
               <th scope="col" class="px-6 py-3">Member ID</th>
               <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">phone</th>
+              <th scope="col" class="px-6 py-3">Phone</th>
               <th scope="col" class="px-6 py-3">Package</th>
               <th scope="col" class="px-6 py-3">Join Date</th>
               <th scope="col" class="px-6 py-3">Status</th>
@@ -23,21 +25,27 @@
           </thead>
           <tbody>
             {% for member in members %}
-            <tr class="bg-white border text-sm text-center">
-              <td class="px-6 py-4">{{member.memberId}}</td>
-              <td class="px-6 py-4">{{member.name}}</td>
-              <td class="px-6 py-4">{{member.phone}}</td>
-              <td class="px-6 py-4">{{member.package.name}}</td>
-              <td class="px-6 py-4">{{member.join_date}}</td>
-              <td class="px-6 py-4">{{member.status}}</td>
+            <tr class="bg-white border text-sm text-center hover:bg-gray-50">
+              <td class="px-6 py-4">{{ member.memberId }}</td>
+              <td class="px-6 py-4">{{ member.name }}</td>
+              <td class="px-6 py-4">{{ member.phone }}</td>
+              <td class="px-6 py-4">{{ member.package.name }}</td>
+              <td class="px-6 py-4">{{ member.join_date }}</td>
+              <td class="px-6 py-4">
+                <span class="px-2 py-1 rounded-full {% if member.status %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                  {{ member.status|yesno:"Active,Inactive" }}
+                </span>
+              </td>
               <td class="px-6 py-4">
                 {% if member.due_payment < 0 %}
-                {{ member.due_payment|abs_val }} Taka Advanced
-                  {% else %}
-                  {{member.due_payment}} Taka Due
+                <span class="text-green-600">{{ member.due_payment|member_abs }} Taka Advanced</span>
+                {% else %}
+                <span class="text-red-600">{{ member.due_payment }} Taka Due</span>
                 {% endif %}
-                </td>
-              <td class="px-6 py-4"><a class="underline" href="{% url "member:edit" member.id %}">View</a></td>
+              </td>
+              <td class="px-6 py-4">
+                <a class="underline text-blue-600 hover:text-blue-800" href="{% url 'member:edit' member.memberId %}">View</a>
+              </td>
             </tr>
             {% endfor %}
           </tbody>
@@ -49,29 +57,30 @@
 {% endblock body %}
 {% block js %}
 <script>
-  $("document").ready(() => {
+  $(document).ready(() => {
+    const updateDueAmount = (price) => {
+      document.querySelectorAll(".due_amount").forEach(item => {
+        item.value = price;
+      });
+    };
+
     // Package Select
     $("#package").change(e => {
-      let price = e.target.value;
-      price = price.split(' ');
-      price = price[2];
-      $("#payable_amount").val(`${price}`);
-      $("#amount").removeAttr("disabled");
-      $("#amount").val("");
-
-      document.querySelectorAll(".due_amount").forEach(item => {
-        item.value = `${price}`;
-      })
+      const price = e.target.value.split(' ')[2];
+      $("#payable_amount").val(price);
+      $("#amount")
+        .removeAttr("disabled")
+        .val("");
+      updateDueAmount(price);
     });
+
     // Amount Change
-    $("#amount").on('input', (e) => {
-      let pa = $("#payable_amount").val();
-      let a = e.target.value;
-      let val = (Number(pa) - Number(a)) > 0 ? (Number(pa) - Number(a)) : 0;
-      document.querySelectorAll(".due_amount").forEach(item => {
-        item.value = `${val}`;
-      })
-    })
-  })
+    $("#amount").on('input', e => {
+      const payableAmount = Number($("#payable_amount").val());
+      const enteredAmount = Number(e.target.value);
+      const dueAmount = Math.max(0, payableAmount - enteredAmount);
+      updateDueAmount(dueAmount);
+    });
+  });
 </script>
 {% endblock js %}

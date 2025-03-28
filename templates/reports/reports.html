@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+{% extends "../base.html" %}
+{% load report_filters %}
+
+{% block body %}
+<div class="conponentSection p-5 sm:ml-64 bg-gray-200">
+    <div class="componentWrapper">
+        <!-- Date Range Selector -->
+        <div class="bg-white p-4 rounded shadow-md mb-4">
+            <h3 class="text-2xl font-bold mb-4">Financial Reports</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                        <input type="date" name="start_date" value="{{ start_date }}" 
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">End Date</label>
+                        <input type="date" name="end_date" value="{{ end_date }}"
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                    </div>
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-4">
+                    <button type="submit" class="bg-blue-900 text-white py-2 px-4 rounded">
+                        Generate Report
+                    </button>
+                    <a href="{% url 'print_report' %}?start_date={{ start_date }}&end_date={{ end_date }}" 
+                       class="bg-gray-700 text-white py-2 px-4 rounded text-center" 
+                       target="_blank">
+                        Print Report
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Report Summary -->
+        <div class="grid grid-cols-3 gap-4 mb-4">
+            <div class="bg-white p-4 rounded shadow-md">
+                <h4 class="text-lg font-semibold mb-2">Total Revenue</h4>
+                <p class="text-3xl font-bold text-green-600">${{ report.total_revenue.amount__sum|default:"0" }}</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow-md">
+                <h4 class="text-lg font-semibold mb-2">Total Expenses</h4>
+                <p class="text-3xl font-bold text-red-600">${{ report.total_expenses }}</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow-md">
+                <h4 class="text-lg font-semibold mb-2">Net Income</h4>
+                <p class="text-3xl font-bold {% if report.total_revenue.amount__sum > report.total_expenses %}text-green-600{% else %}text-red-600{% endif %}">
+                    ${{ report.total_revenue.amount__sum|default:"0"|report_subtract:report.total_expenses }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Additional Metrics -->
+        <div class="grid grid-cols-3 gap-4 mb-4">
+            <div class="bg-white p-4 rounded shadow-md">
+                <h4 class="text-lg font-semibold mb-2">New Members</h4>
+                <p class="text-3xl font-bold text-blue-600">{{ report.new_members }}</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow-md">
+                <h4 class="text-lg font-semibold mb-2">Coach Sessions</h4>
+                <p class="text-3xl font-bold text-blue-600">{{ report.coach_sessions }}</p>
+            </div>
+            <div class="bg-white p-4 rounded shadow-md">
+                <h4 class="text-lg font-semibold mb-2">Active Members</h4>
+                <p class="text-3xl font-bold text-blue-600">{{ report.active_members }}</p>
+            </div>
+        </div>
+
+        <!-- Equipment Usage -->
+        <div class="bg-white p-4 rounded shadow-md">
+            <h4 class="text-lg font-semibold mb-4">Equipment Utilization</h4>
+            <div class="relative overflow-x-auto">
+                <table class="w-full">
+                    <thead class="text-sm uppercase bg-blue-900 text-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left">Equipment</th>
+                            <th class="px-6 py-3 text-right">Usage Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usage in report.equipment_utilization %}
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4">{{ usage.equipment }}</td>
+                            <td class="px-6 py-4 text-right">{{ usage.usage_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+{% extends "../base.html" %}
+{% load report_filters %}
+
+<!-- Rest of the template remains the same -->
+
+<!-- Use the new filter name -->
+{{ value|report_subtract:arg }}
+
+
+

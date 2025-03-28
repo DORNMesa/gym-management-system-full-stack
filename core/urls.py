@@ -4,6 +4,8 @@ from . import views
 from decorator_include import decorator_include
 from django.contrib.auth.decorators import login_required
 from .decorators import manager_access
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +26,6 @@ urlpatterns = [
     path('member/', decorator_include(login_required,"member.urls",namespace="member")),
     path('coach/', decorator_include(login_required,"coach.urls",namespace="coach")),
     path('transaction/', decorator_include(manager_access,"transaction.urls",namespace="transaction")),
-]
+    path('reports/', include('reports.urls')),
+    path('product/', include('product.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

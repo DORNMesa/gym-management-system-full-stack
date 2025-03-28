@@ -1,15 +1,11 @@
+<!DOCTYPE html>
 <!-- dashboard section starts  -->
-<div
-  class="dashboardContainer fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
-  aria-label="Sidebar"
->
+<div class="dashboardContainer fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
   <div class="h-full px-3 py-4 overflow-y-auto bg-blue-900 relative">
     <!-- dashboard top section  -->
-    <div
-      class="dashBoardTop mb-8 flex flex-col justify-center items-center text-gray-50 border-b-2 border-gray-200 pb-3"
-    >
+    <div class="dashBoardTop mb-8 flex flex-col justify-center items-center text-gray-50 border-b-2 border-gray-200 pb-3">
       <div class="iconSection pb-1">
-        <i class='bx bx-user text-6xl text-white'></i>
+        <i class="bx bx-user text-6xl text-white"></i>
       </div>
 
       <div class="bottomText text-xl text-center leading-[1.5rem]">
@@ -24,111 +20,81 @@
       <ul class="space-y-2 font-medium">
         {% if request.user.is_manager %}
         <li>
-            <a
-            href="{% url "managerDashboard" %}"
-            class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900"
-            >
+          <a href="{% url 'managerDashboard' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
             <p class="ms-3">ផ្ទាំងគ្រប់គ្រង</p>
           </a>        
         </li>
         <li>
-          <a
-            href="{% url "user:index" %}"
-            class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900"
-          >
+          <a href="{% url 'user:index' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
             <p class="ms-3">បុគ្គលិក</p>
           </a>
         </li>
-        <!--  -->
         <li>
-          <a
-            href="{% url "member:admin_view" %}"
-            class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900"
-          >
+          <a href="{% url 'member:admin_view' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
             <p class="ms-3">សមាជិក</p>
           </a>
         </li>
-        <!--  -->
         <li>
-          <a
-            href="{% url "coach:index" %}"
-            class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900"
-          >
+          <a href="{% url 'coach:index' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
             <p class="ms-3">គ្រូបង្វឺក</p>
           </a>
         </li>
-        <!--  -->
         <li>
-          <a
-            href="{% url "equipment:index" %}"
-            class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900"
-          >
+          <a href="{% url 'equipment:index' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
             <p class="ms-3">ផលិតផល</p>
           </a>
         </li>
-        <!--  -->
         <li>
-          <a
-            href="{% url "schedule:index" %}"
-            class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900"
-          >
+          <a href="{% url 'schedule:index' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
             <p class="ms-3">កាលបរិច្ឆេទ</p>
           </a>
         </li>
-        <!--  -->
         <li>
-          <a
-            href="{% url "package:index" %}"
-            class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900"
-          >
+          <a href="{% url 'package:index' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
             <p class="ms-3">កញ្ចប់</p>
           </a>
         </li>
-        <!--  -->
         <li>
-          <a
-            href="{% url "transaction:index" %}"
-            class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900"
-          >
+          <a href="{% url 'transaction:index' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
             <p class="ms-3">ប្រតិបត្តិការ</p>
           </a>
         </li>
-          {% else %}
-          <li>
-          <a
-          href="{% url "employeeDashboard" %}"
-          class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900"
-          >
-          <p class="ms-3">ផ្ទាំងគ្រប់គ្រង</p>
-        </a>
+        <li>
+          <a href="{% url 'reports' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
+            <p class="ms-3">Reports</p>
+          </a>
         </li>
         <li>
-          <a
-            href="{% url "member:index" %}"
-            class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900"
-          >
+          <a href="{% url 'product:index' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
+            <p class="ms-3">Products</p>
+          </a>
+        </li>
+        {% else %}
+        <li>
+          <a href="{% url 'employeeDashboard' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
+            <p class="ms-3">ផ្ទាំងគ្រប់គ្រង</p>
+          </a>
+        </li>
+        <li>
+          <a href="{% url 'member:index' %}" class="border border-gray-50 flex justify-center items-center p-2 text-gray-100 rounded hover:bg-gray-100 hover:text-gray-900">
             <p class="ms-3">សមាជិក</p>
           </a>
         </li>
-        <!--  -->     
-      {% endif %}  
+        {% endif %}  
       </ul>
     </div>
-
     <!-- dashboard lists ends   -->
 
-    <!-- logout  button starts  -->
+    <!-- logout button starts  -->
     <div class="logoutSection absolute bottom-3 left-3">
-      <div
-        class="logOutWrapper flex justify-between items-center cursor-pointer"
-      >
-        <a href="{% url "logout" %}" class="flex items-center justify-center logoutIcon bg-blue-400 w-10 h-10 rounded-full shadow-lg">
-          <i class='bx bx-log-out text-2xl text-white'></i>
+      <div class="logOutWrapper flex justify-between items-center cursor-pointer">
+        <a href="{% url 'logout' %}" class="flex items-center justify-center logoutIcon bg-blue-400 w-10 h-10 rounded-full shadow-lg">
+          <i class="bx bx-log-out text-2xl text-white"></i>
         </a>
         <p class="text-lg pl-2 font-semibold text-gray-50">ចាកចេញ</p>
       </div>
     </div>
-    <!-- logout  button ends  -->
+    <!-- logout button ends  -->
   </div>
 </div>
 <!-- dashboard section ends  -->

@@ -1,5 +1,6 @@
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.hashers import make_password
+from django.contrib import messages
 from datetime import datetime
 
 from user.models import User
@@ -8,8 +9,8 @@ from attendance.models import Attendance
 from transaction.models import Credit
 # Create your views here.
 def index(request):
-    employees = User.objects.filter(is_employee = True)
-    schedules = Schedule.objects.filter(name = 'stuff')
+    employees = User.objects.filter(is_employee=True)
+    schedules = Schedule.objects.filter(name='stuff')
     
     if request.method == "POST":
         username = request.POST.get("username")
@@ -23,30 +24,49 @@ def index(request):
         password = request.POST.get("password")
         schedules_res = request.POST.getlist("schedule")
 
-        lastId = User.objects.last().id
+        # Check if username already exists
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists. Please choose a different username.")
+            return redirect("/user/")
 
-        user = User.objects.create(
-            username = username,
-            name = name,
-            phone = phone,
-            dob = dob,
-            nid = nid,
-            gender = gender,
-            salary = salary,
-            address = address,
-            password = make_password(password),
-            emp_id = "FKE-" + str(lastId+1),
-            join_date = datetime.now()
-        )
+        # Check if phone number already exists
+        if User.objects.filter(phone=phone).exists():
+            messages.error(request, "Phone number already exists. Please use a different phone number.")
+            return redirect("/user/")
 
-        for schedule in schedules_res:
-            user.schedules.add(schedule)
+        try:
+            lastId = User.objects.last().id if User.objects.exists() else 0
+
+            user = User.objects.create(
+                username=username,
+                name=name,
+                phone=phone,
+                dob=dob,
+                nid=nid,
+                gender=gender,
+                salary=salary,
+                address=address,
+                password=make_password(password),
+                emp_id="FKE-" + str(lastId + 1),
+                join_date=datetime.now(),
+                is_employee=True,
+                is_manager=False
+            )
+
+            for schedule in schedules_res:
+                user.schedules.add(schedule)
+
+            messages.success(request, "Employee added successfully")
+            return redirect("/user/")
+        except Exception as e:
+            messages.error(request, f"Error creating user: {str(e)}")
+            return redirect("/user/")
 
     context = {
-        'employees':employees,
-        'schedules':schedules,
+        'employees': employees,
+        'schedules': schedules
     }
-    return render(request,'user/index.html',context)
+    return render(request, 'user/index.html', context)
 
 def edit(request,pk):
     employee = User.objects.get(id = pk)
