@@ -4,6 +4,7 @@ from member.models import Member
 from user.models import User
 from coach.models import Coach
 from equipment.models import Equipment
+from product.models import Product
 
 DEBIT_REASONS = [
     ('admission', 'Admission'),
@@ -61,6 +62,8 @@ class Credit(models.Model):
     coach = models.ForeignKey(Coach, on_delete=models.CASCADE,null=True,blank=True)
     is_equipment= models.BooleanField(_("Is Equipment"),default=False)
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE,null=True,blank=True)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+    quantity = models.IntegerField(default=1)
 
     def __str__(self) :
         return f'{self.trxId} - {self.amount}'

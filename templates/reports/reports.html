@@ -91,9 +91,146 @@
                 </table>
             </div>
         </div>
+
+        <!-- Report Type Selector -->
+        <div class="mt-4">
+            <select id="reportType" class="w-full p-2 mb-4 border rounded" onchange="showReport(this.value)">
+                <option value="">Select Report Type</option>
+                <option value="low-stock">Low Stock Products</option>
+                <option value="inventory">Product Inventory</option>
+                <option value="sales">Sales Report</option>
+            </select>
+            
+            <!-- Low Stock Products -->
+            <div id="low-stock" class="report-section hidden">
+                <div class="bg-white p-4 rounded shadow-md">
+                    <h4 class="text-lg font-semibold mb-4">Low Stock Products</h4>
+                    <div class="relative overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="text-sm uppercase bg-blue-900 text-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3">Image</th>
+                                    <th class="px-6 py-3">Name</th>
+                                    <th class="px-6 py-3">Category</th>
+                                    <th class="px-6 py-3">Current Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in report.low_stock_products %}
+                                <tr class="bg-white border-b">
+                                    <td class="px-6 py-4">
+                                        {% if product.image %}
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-12 h-12 object-cover">
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4">{{ product.name }}</td>
+                                    <td class="px-6 py-4">{{ product.category.name }}</td>
+                                    <td class="px-6 py-4">{{ product.stock }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Report -->
+            <div id="inventory" class="report-section hidden">
+                <div class="bg-white p-4 rounded shadow-md">
+                    <h4 class="text-lg font-semibold mb-4">Product Inventory</h4>
+                    <div class="relative overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="text-sm uppercase bg-blue-900 text-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3">Image</th>
+                                    <th class="px-6 py-3">Name</th>
+                                    <th class="px-6 py-3">Category</th>
+                                    <th class="px-6 py-3">Cost</th>
+                                    <th class="px-6 py-3">Quantity</th>
+                                    <th class="px-6 py-3">Total Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in report.inventory %}
+                                <tr class="bg-white border-b">
+                                    <td class="px-6 py-4">
+                                        {% if product.image %}
+                                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-12 h-12 object-cover">
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4">{{ product.name }}</td>
+                                    <td class="px-6 py-4">{{ product.category.name }}</td>
+                                    <td class="px-6 py-4">${{ product.price }}</td>
+                                    <td class="px-6 py-4">{{ product.stock }}</td>
+                                    <td class="px-6 py-4">${{ product.total_value }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="bg-gray-100 font-bold">
+                                    <td colspan="5" class="px-6 py-4 text-right">Total Inventory Value:</td>
+                                    <td class="px-6 py-4">${{ report.total_inventory_value }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Report -->
+            <div id="sales" class="report-section hidden">
+                <div class="bg-white p-4 rounded shadow-md">
+                    <h4 class="text-lg font-semibold mb-4">Sales Report</h4>
+                    <div class="relative overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="text-sm uppercase bg-blue-900 text-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3">Date</th>
+                                    <th class="px-6 py-3">Transaction ID</th>
+                                    <th class="px-6 py-3">Amount</th>
+                                    <th class="px-6 py-3">Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sale in report.sales %}
+                                <tr class="bg-white border-b">
+                                    <td class="px-6 py-4">{{ sale.date|date:"Y-m-d" }}</td>
+                                    <td class="px-6 py-4">{{ sale.trxId }}</td>
+                                    <td class="px-6 py-4">${{ sale.amount }}</td>
+                                    <td class="px-6 py-4">{{ sale.reason }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="bg-gray-100 font-bold">
+                                    <td colspan="3" class="px-6 py-4 text-right">Total Sales:</td>
+                                    <td class="px-6 py-4">${{ report.total_sales_value }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        function showReport(reportType) {
+            // Hide all report sections
+            document.querySelectorAll('.report-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected report section
+            if (reportType) {
+                document.getElementById(reportType).classList.remove('hidden');
+            }
+        }
+        </script>
     </div>
 </div>
 {% endblock %}
+
+
 
 
 
