@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from datetime import datetime
 from django.contrib import messages
+from decimal import Decimal, InvalidOperation
 
 from .models import Credit,Debit
 from user.models import User
@@ -36,34 +37,38 @@ def index(request):
     return render(request,'transaction/index.html',context)
 
 
-def payE(request,pk):
-    employee = User.objects.get(id = pk)
+def payE(request, pk):
+    employee = User.objects.get(id=pk)
     
     if request.method == "POST":
         try:
-            amount = request.POST.get("amount")
-            # Convert to float first, then to int
-            amount_float = float(amount)
-            amount_int = int(amount_float)
+            amount = request.POST.get("amount", "0")
+            # Safer conversion with decimal handling
+            amount_decimal = Decimal(amount).quantize(Decimal('0.01'))
+            amount_int = int(amount_decimal)
+
+            if amount_int <= 0:
+                messages.error(request, "Amount must be positive")
+                return redirect("/transaction/")
 
             timestamp = int(datetime.now().timestamp())
             employee.due -= amount_int
             employee.save()
 
             Credit.objects.create(
-                trxId = 'FK-TRX-' + str(timestamp),
-                reason = 'salary_employee',
-                amount = amount_int,
-                date = datetime.now(),
-                is_employee = True,
-                employee = employee
+                trxId='FK-TRX-' + str(timestamp),
+                reason='salary_employee',
+                amount=amount_int,
+                date=datetime.now(),
+                is_employee=True,
+                employee=employee
             )
             meta = MetaData.objects.last()
             meta.funds -= amount_int
             meta.save()
 
             return redirect("/transaction/")
-        except ValueError:
+        except (ValueError, InvalidOperation):
             messages.error(request, "Invalid amount format")
             
     context = {

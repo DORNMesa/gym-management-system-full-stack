@@ -81,6 +81,16 @@ def edit(request,pk):
     }
     return render(request,"equipment/edit.html",context)
 
+def validateBookingTime(start_time, end_time):
+    now = datetime.now()
+    if start_time < now:
+        return False, "Cannot book for past time"
+    if end_time <= start_time:
+        return False, "End time must be after start time"
+    if (end_time - start_time).total_seconds() > 7200:  # 2 hours max
+        return False, "Maximum booking duration is 2 hours"
+    return True, ""
+
 def activity(request):
     eqs = Equipment.objects.filter(is_available = True).order_by("-id")
     eqActivities = EquipmentActivityTrack.objects.all().order_by("start_time")[:5]

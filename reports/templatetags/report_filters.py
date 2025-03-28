@@ -6,9 +6,10 @@ register = template.Library()
 def subtract(value, arg):
     """Subtracts arg from value with float conversion and error handling"""
     try:
-        return float(value) - float(arg)
+        return float(value or 0) - float(arg or 0)
     except (ValueError, TypeError):
         return 0
+
 
 
 
